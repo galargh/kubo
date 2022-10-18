@@ -8,19 +8,19 @@ jobs:
         goarch:
         - 386
         - amd64
-      fail-fast: true
+      fail-fast: false
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-go@v3
       with:
         go-version: '1.19.x'
-    - run: mkdir kubo
     - run: go install ./cmd/ipfs
       env:
-        GOPATH: kubo
+        GOPATH: ${{ github.workspace }}/go
         GOOS: windows
         GOARCH: ${{ matrix.goarch }}
-    - run: cp -r cmd/ipfs/dist kubo
+    - run: mkdir kubo
+    - run: cp -r cmd/ipfs/dist go/bin/windows_${{ matrix.goarch }} kubo
     - id: version
       run: echo "this=$(cat .version | xargs)" >> $GITHUB_OUTPUT
     - run: zip -r "kubo_v${{ steps.version.outputs.this }}_windows-${{ matrix.goarch }}.zip" kubo/* > /dev/null
