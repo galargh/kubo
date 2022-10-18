@@ -1,0 +1,30 @@
+on: push
+
+jobs:
+  dist:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        goarch:
+        - 386
+        - amd64
+      fail-fast: true
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-go@v3
+      with:
+        go-version: '1.19.x'
+    - run: mkdir kubo
+    - run: go install ./cmd/ipfs
+      env:
+        GOPATH: kubo
+        GOOS: windows
+        GOARCH: ${{ matrix.goarch }}
+    - run: cp -r cmd/ipfs/dist kubo
+    - id: version
+      run: echo "this=$(cat .version | xargs)" >> $GITHUB_OUTPUT
+    - run: zip -r "kubo_v${{ steps.version.outputs.this }}_windows-${{ matrix.goarch }}.zip" kubo/* > /dev/null
+    - uses: actions/upload-artifact@v3
+      with:
+        name: kubo_v${{ steps.version.outputs.this }}_windows-${{ matrix.goarch }}
+        path: kubo_v${{ steps.version.outputs.this }}_windows-${{ matrix.goarch }}.zip
