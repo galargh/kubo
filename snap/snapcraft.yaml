@@ -1,5 +1,5 @@
 # This snap will build kubo from source.
-name: ipfs
+name: repository-connection-test
 summary: global, versioned, peer-to-peer filesystem # 79 char long summary
 description: |
   Kubo is not distributed through Snap anymore (https://github.com/ipfs/kubo/issues/8688).
