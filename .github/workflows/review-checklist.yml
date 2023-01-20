@@ -2,6 +2,11 @@ name: Post review checklist on PRs
 
 on:
   pull_request_target:
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - ready_for_review
 
 jobs:
   post:
