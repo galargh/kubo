@@ -23,15 +23,15 @@ jobs:
             const files = await github.rest.paginate(github.rest.pulls.listFiles, {
               issue_number: context.issue.number,
               owner: context.repo.owner,
-              repo: context.repo.repo,
+              repo: context.repo.repo
             })
             const fileNames = files.map(file => file.filename)
 
             const versionFile = await github.rest.repos.getContent({
-              owner,
-              repo,
-              'version.go',
-            });
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              path: 'version.go',
+            })
             const versionContent = atob(version.content)
             const versionRegex = /CurrentVersionNumber = "([^"]+)"/
             const version = versionContent.match(versionRegex)[1]
